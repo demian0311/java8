@@ -1,60 +1,92 @@
 package com.neidetcher.java8._00_nonfpfeatures.optional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class OptionalMotivation {
 
-    class Employee0{
-        Integer id;
-        String name;
-        LocalDate hireDate;
-        LocalDate terminationDate;
+    @Test public void usingOptionalPresent() {
+        Optional<String> stringOptional = Optional.of("Hello");
+        assertTrue(stringOptional.isPresent());
+        assertEquals("Hello", stringOptional.get());
+        assertEquals("Hello", stringOptional.orElse("world"));
+        stringOptional.ifPresent(s -> assertEquals("Hello", s));
+    }
 
-        public Employee0(Integer idIn, String nameIn, LocalDate hireDateIn, LocalDate terminationDateIn){
-            id = idIn;
+    @Test public void usingOptionalNotPresent() {
+        Optional<String> stringOptional = Optional.empty();
+
+        assertFalse(stringOptional.isPresent());
+        assertEquals("world", stringOptional.orElse("world"));
+        stringOptional.ifPresent(s -> fail("not present"));
+
+        try {
+            stringOptional.get();
+            fail("should throw an NSEE");
+        }catch(NoSuchElementException nsee){
+            assertEquals("No value present", nsee.getMessage());
+        }
+    }
+
+    @Test public void optionalEquality() {
+        Optional<String> fooName = Optional.of("Foo");
+        Optional<String> fooName2 = Optional.of("Foo");
+        Optional<String> barName = Optional.of("Bar");
+
+        assertEquals(fooName, fooName2);
+        assertEquals(fooName.hashCode(), fooName2.hashCode());
+
+        assertNotEquals(fooName, barName);
+        assertNotEquals(fooName.hashCode(), barName.hashCode());
+    }
+
+
+    @Test(expected = NullPointerException.class)
+    public void usingOptionalNull() {
+        Optional.of(null);
+    }
+
+    @Test public void ofNullable() {
+        Optional<String> stringOptional = Optional.ofNullable(null);
+
+        assertFalse(stringOptional.isPresent());
+        assertEquals("world", stringOptional.orElse("world"));
+        stringOptional.ifPresent(s -> fail("not present"));
+    }
+
+    @Test public void streamFindFirst() {
+        List<String> stringList = Arrays.asList("AAA", "BBB", "CCC");
+        Optional<String> firstString = stringList.stream().findFirst();
+        assertEquals(Optional.of("AAA"), firstString);
+    }
+
+    public class Person {
+        public final String name;
+        public final LocalDate birthDate;
+        public final Optional<LocalDate> deathDate;
+
+        public Person(
+                String nameIn,
+                LocalDate birthDateIn,
+                Optional<LocalDate> deathDateIn){
             name = nameIn;
-            hireDate = hireDateIn;
-            terminationDate = terminationDateIn;
-        }
-
-        public long numberOfDaysEmployed(){
-            LocalDate effectiveTerminationDate = terminationDate == null? LocalDate.now(): terminationDate;
-            return hireDate.until(effectiveTerminationDate, ChronoUnit.DAYS);
+            birthDate = birthDateIn;
+            deathDate = deathDateIn;
         }
     }
 
-    @Test public void test0(){
-        Employee0 employee0 = new Employee0(1, "Foo Bar", LocalDate.now().minusDays(20), null);
-        assertEquals(20, employee0.numberOfDaysEmployed());
+    @Test public void optionalInUse(){
+        Person p = new Person(
+                "Fred",
+                LocalDate.parse("1971-12-04"),
+                Optional.empty());
     }
-
-    class Employee1{
-        Integer id;
-        String name;
-        LocalDate hireDate;
-        Optional<LocalDate> terminationDate;
-
-        public Employee1(Integer idIn, String nameIn, LocalDate hireDateIn, Optional<LocalDate> terminationDateIn){
-            id = idIn;
-            name = nameIn;
-            hireDate = hireDateIn;
-            terminationDate = terminationDateIn;
-        }
-
-        public long numberOfDaysEmployed(){
-            return hireDate.until(terminationDate.orElse(LocalDate.now()), ChronoUnit.DAYS);
-        }
-    }
-
-    @Test public void test1(){
-        Employee1 employee1 = new Employee1(1, "Foo Bar", LocalDate.now().minusDays(20), Optional.empty());
-        assertEquals(20, employee1.numberOfDaysEmployed());
-    }
-
-
 }

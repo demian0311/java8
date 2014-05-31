@@ -1,9 +1,44 @@
 package com.neidetcher.java8._00_nonfpfeatures;
 
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringJoiner;
+
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class InterfacesTest {
+    List<String> groceryList = Arrays.asList(
+            "spinach",
+            "ribs",
+            "bacon",
+            "brussels sprouts",
+            "eggs");
+
+    String del = ", ";
+
+    String expectedShoppingListString =
+            "spinach, ribs, bacon, brussels sprouts, eggs";
+
+    @Test public void preJava8_iterable_looping(){
+        StringJoiner sj = new StringJoiner(del);
+
+        for(String item : groceryList){
+            sj.add(item);
+        }
+
+        assertEquals(expectedShoppingListString, sj.toString());
+    }
+
+    @Test public void java8_iterable_forEach() {
+        StringJoiner sj = new StringJoiner(del);
+
+        groceryList.forEach(sj::add);
+
+        assertEquals(expectedShoppingListString, sj.toString());
+    }
 
     interface Cowboy{
         public default String draw(){
@@ -15,9 +50,6 @@ public class InterfacesTest {
         //public String draw(){ return "explosión"; }
     }
 
-    /**
-     * Caballero gets the default method from the interface Cowboy.
-     */
     @Test public void defaultMethods(){
         Caballero caballero = new Caballero();
         assertEquals("bang", caballero.draw());
@@ -31,18 +63,14 @@ public class InterfacesTest {
 
     class CircleCowboy implements Circle, Cowboy{
 
-        /** This is required to disambiguate what
-         * default method to use. */
+        // Required to disambiguate what method to use.
         public String draw(){
             return Cowboy.super.draw();
             //return Circle.super.draw();
         }
     }
 
-    /**
-     * 2 interfaces, must disambiguate.
-     */
-    @Test public void disambiguate(){
+    @Test public void mustDisambiguate(){
         CircleCowboy circleCowboy = new CircleCowboy();
         assertEquals("bang", circleCowboy.draw());
     }
@@ -53,12 +81,10 @@ public class InterfacesTest {
         }
     }
 
-    class CircleDeckOfCards extends DeckOfCards implements Circle{}
+    class CircleDeckOfCards extends DeckOfCards implements Circle{
+    }
 
-    /**
-     * The class wins, no need to disambiguate.
-     */
-    @Test public void test(){
+    @Test public void classesWin(){
         CircleDeckOfCards circleDeckOfCards = new CircleDeckOfCards();
         assertEquals("A♠", circleDeckOfCards.draw());
     }

@@ -10,24 +10,51 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 public class StringTest {
-    // TODO: show how bad it was to do without the joiners
 
-    @Test public void stringJoin() {
-        List<String> stringList = Arrays.asList("this", "that", "theOther");
+    List<String> groceryList = Arrays.asList(
+            "spinach",
+            "ribs",
+            "bacon",
+            "brussels sprouts",
+            "eggs");
+    String del = ", ";
 
-        String allTogether = String.join(", ", stringList);
-        System.out.println("allTogether: " + allTogether);
+    String expectedShoppingListString =
+            "spinach, ribs, bacon, brussels sprouts, eggs";
 
-        assertEquals("this, that, theOther", allTogether);
+    @Test public void preJava8(){
+        StringBuilder sb = new StringBuilder();
+
+        for(String item : groceryList) {
+            sb.append(item + del);
+        }
+
+        assertEquals(
+                expectedShoppingListString,
+                sb.toString().substring(0, sb.length() - del.length()));
     }
 
     @Test public void stringJoiner() {
-        StringJoiner sj = new StringJoiner(", ");
-        sj.add("this");
-        sj.add("that");
-        sj.add("theOther");
+        StringJoiner sj = new StringJoiner(del);
 
-        assertEquals("this, that, theOther", sj.toString());
+        for(String item : groceryList){
+            sj.add(item);
+        }
+
+        assertEquals(expectedShoppingListString, sj.toString());
     }
 
+    @Test public void stringJoinerForEach() {
+        StringJoiner sj = new StringJoiner(del);
+
+        groceryList.forEach(sj::add);
+
+        assertEquals(expectedShoppingListString, sj.toString());
+    }
+
+    @Test public void string_join() {
+        assertEquals(
+                expectedShoppingListString,
+                String.join(del, groceryList));
+    }
 }
