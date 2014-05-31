@@ -15,6 +15,7 @@ public class MethodReferences {
             "bacon",
             "brussels sprouts",
             "eggs");
+
     List<Integer> expectedDoubleLengths = Arrays.asList(14, 8, 10, 32, 8);
 
     private int doubleIt(int arg){
