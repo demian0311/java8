@@ -1,6 +1,6 @@
 package com.neidetcher.java8._00_nonfpfeatures;
 
-import com.neidetcher.java8.jtrade.Stock;
+//import com.neidetcher.java8.jtrade.Stock;
 import org.junit.Test;
 
 import java.util.Date;
@@ -21,6 +21,7 @@ public class OptionalTest {
     }
 
 
+    /*
     @Test public void optionalInCollections(){
         Optional<Stock> firstStock = Stock.portfolio
                 .stream()
@@ -32,6 +33,7 @@ public class OptionalTest {
             fail("there should have been a first stock");
         }
     }
+    */
 
     @Test public void dontCallGetWithoutChecking() {
         Optional<String> name = Optional.empty();
