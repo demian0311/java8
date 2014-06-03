@@ -3,10 +3,7 @@ package com.neidetcher.java8._02_streams;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -118,6 +115,30 @@ public class Streams {
                         ArrayList::addAll);
 
         assertEquals(Arrays.asList("bacon", "brussels sprouts"), bGroceryList);
+    }
+
+    String categorize(String foodIn) {
+        switch(foodIn){
+            case "bacon":   return "meat";
+            case "ribs":    return "meat";
+            case "steak":   return "meat";
+            case "chicken": return "meat";
+        }
+
+        return "notMeat";
+    }
+
+    @Test public void collectGroupBy(){
+        Map<String, List<String>> expected = new HashMap<String, List<String>>(){{
+            put("notMeat", Arrays.asList("spinach", "brussels sprouts", "eggs"));
+            put("meat", Arrays.asList("ribs", "bacon"));
+        }};
+
+        Map<String, List<String>> foo = groceryList
+                .stream()
+                .collect(Collectors.groupingBy(this::categorize));
+
+        assertEquals(expected, foo);
     }
 }
 
