@@ -85,10 +85,12 @@ public class Streams {
                 .forEach(System.out::println); // terminal
     }
 
+    // also .peek()
     @Test public void reduce(){
         int evenNumbersSum = IntStream
                 .range(0, 10)                  // source
                 .filter(curr -> curr % 2 == 0) // intermediate
+                .peek(curr -> System.out.println("I got this far: " + curr))
                 .reduce(0, Integer::sum);      // terminal
 
         assertEquals(20, evenNumbersSum);

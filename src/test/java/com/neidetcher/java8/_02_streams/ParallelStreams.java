@@ -35,6 +35,7 @@ public class ParallelStreams {
     @Test public void serial(){
         long begin = System.currentTimeMillis();
         long meatCount = groceryList.stream()
+                .peek(curr -> System.out.println("serial: " + curr))
                 .filter(curr -> categorize(curr).equals("meat"))
                 .count();
         long duration = System.currentTimeMillis() - begin;
@@ -47,6 +48,7 @@ public class ParallelStreams {
     @Test public void parallel(){
         long begin = System.currentTimeMillis();
         long meatCount = groceryList.parallelStream()
+                .peek(curr -> System.out.println("parallel: " + curr))
                 .filter(curr -> categorize(curr).equals("meat"))
                 .count();
         long duration = System.currentTimeMillis() - begin;
@@ -62,12 +64,14 @@ public class ParallelStreams {
         int[] actual = {0};
         IntStream.range(0, 100)
                 .forEach(ii -> actual[0] += ii);
+        System.out.println("serial actual: " + actual[0]);
         assertEquals(expected, actual[0]);
 
         int[] actual2 = {0};
         IntStream.range(0, 100)
                 .parallel()
                 .forEach(ii -> actual2[0] += ii);
+        System.out.println("parallel actual: " + actual2[0]);
         assertNotEquals(expected, actual2[0]);
     }
 }
