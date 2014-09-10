@@ -48,22 +48,30 @@ public class MethodReferences {
 
     @Test public void staticMethodReferenceOnType(){
         int result = IntStream.range(0, 10)
-                .reduce(0, Integer::sum);
+                .reduce(0, Integer::sum); // .reduce(0, (a, b) -> a + b);
 
         assertEquals(45, result);
     }
 
     @Test public void instanceMethodReferenceOnType(){
         List<Integer> result = groceryList.stream()
-                .map(String::length) // instance method on type
+                .map(String::length) // .map(curr -> curr.length())
                 .collect(Collectors.toList());
     }
 
+    class Tripler{
+        int tripleIt(int arg){
+            return arg * 3;
+        }
+    }
+
     @Test public void instanceMethodOnInstance(){
+        Tripler tripler = new Tripler();
+
         int result = IntStream.range(0, 10)
-                .map(this::doubleIt) // this is the object here
+                .map(tripler::tripleIt)// .map(curr -> tripler.tripleIt(curr))
                 .sum();
 
-        assertEquals(90, result);
+        assertEquals(135, result);
     }
 }
