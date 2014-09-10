@@ -53,13 +53,13 @@ public class MethodReferences {
         assertEquals(45, result);
     }
 
-    @Test public void instanceMethodOnType(){
+    @Test public void methodOnTypeStaticReference(){
         List<Integer> result = groceryList.stream()
                 .map(String::length) // instance method on type
                 .collect(Collectors.toList());
     }
 
-    @Test public void instanceMethodOnObject(){
+    @Test public void methodOnObjectStaticReference(){
         int result = IntStream.range(0, 10)
                 .map(this::doubleIt) // this is the object here
                 .sum();
