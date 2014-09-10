@@ -46,20 +46,20 @@ public class MethodReferences {
     /////////////////////////////////////////////////////////////////
     // The 3 types of Method References
 
-    @Test public void staticMethodReference(){
+    @Test public void staticMethodReferenceOnType(){
         int result = IntStream.range(0, 10)
                 .reduce(0, Integer::sum);
 
         assertEquals(45, result);
     }
 
-    @Test public void methodOnTypeStaticReference(){
+    @Test public void instanceMethodReferenceOnType(){
         List<Integer> result = groceryList.stream()
                 .map(String::length) // instance method on type
                 .collect(Collectors.toList());
     }
 
-    @Test public void methodOnObjectStaticReference(){
+    @Test public void instanceMethodOnInstance(){
         int result = IntStream.range(0, 10)
                 .map(this::doubleIt) // this is the object here
                 .sum();
