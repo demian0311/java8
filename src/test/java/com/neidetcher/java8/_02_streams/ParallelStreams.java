@@ -74,4 +74,6 @@ public class ParallelStreams {
         System.out.println("parallel actual: " + actual2[0]);
         assertNotEquals(expected, actual2[0]);
     }
+
+    // have an example of messing with something not effectively final
 }

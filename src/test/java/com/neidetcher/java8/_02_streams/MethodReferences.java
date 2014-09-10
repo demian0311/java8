@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MethodReferences {
 
@@ -42,4 +43,27 @@ public class MethodReferences {
         assertEquals(expectedDoubleLengths, lengths);
     }
 
+    /////////////////////////////////////////////////////////////////
+    // The 3 types of Method References
+
+    @Test public void staticMethodReference(){
+        int result = IntStream.range(0, 10)
+                .reduce(0, Integer::sum);
+
+        assertEquals(45, result);
+    }
+
+    @Test public void instanceMethodOnType(){
+        List<Integer> result = groceryList.stream()
+                .map(String::length) // instance method on type
+                .collect(Collectors.toList());
+    }
+
+    @Test public void instanceMethodOnObject(){
+        int result = IntStream.range(0, 10)
+                .map(this::doubleIt) // this is the object here
+                .sum();
+
+        assertEquals(90, result);
+    }
 }
